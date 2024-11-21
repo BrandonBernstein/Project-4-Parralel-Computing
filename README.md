@@ -50,8 +50,16 @@ To run the code use ```mpirun -np 25 python /gpfs/home/bsbernstein/main.py --gra
 - Broadcast general parameters to processors.
 - Scatter particles to processors corresponding to their sub-boxes.
 
+<p align="center">
+  <img src="https://github.com/BrandonBernstein/Project-4-Parralel-Computing/blob/main/initial-particle-gen.png" alt="Particle Initialization" width="500">
+</p>
+
 #### **Step 2: Optional Load Balancing**
 - Create new boxes by setting an initial column on the left side of the grid. Incrementally expanding that column east until the number of particles contained is within 4% $\pm$ 0.2%. Then set the next column's left boundary to the previous stopping stopping point and repeat. The balance achieved generally makes the maximum load on a single processor 4.2%.
+
+<p align="center">
+  <img src="https://github.com/BrandonBernstein/Project-4-Parralel-Computing/blob/main/load-balanced-particle.png" alt="Particle Initialization" width="500">
+</p>
 
 #### **Step 2: All Gather Particles on Each Processor**
 - Gather a complete list of all particles in the system (excluding local particles) for calculations against the local particles.
@@ -60,6 +68,8 @@ To run the code use ```mpirun -np 25 python /gpfs/home/bsbernstein/main.py --gra
 - Each processor calculates the distance for its local particles
 - Filters all particles outside the $r_c = 10$ cutoff.
 - Calculates potential and aggregates values.
+
+An image of a particle and the radius of interest across in the unbalanced case can be seen below.
 
 #### **Step 4: Profiling and MPI Communication**
 - Collect timing information for computation and MPI communication.

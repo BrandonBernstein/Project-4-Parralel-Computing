@@ -46,6 +46,8 @@ You are required to:
 - Broadcast general parameters to processors.
 - Scatter particles to processors corresponding to their sub-boxes.
 
+
+
 #### **Step 2: Optional Load Balancing**
 - Create new boxes by setting an initial column on the left side of the grid. Incrementally expanding that column east until the number of particles contained is within $4\% \pm 0.2\%$. Then set the next column's left boundary to the previous stopping stopping point and repeat. The balance achieved generally makes the maximum load on a single processor 4.2%.
 
@@ -61,7 +63,7 @@ You are required to:
 
 ## Results
 
-### **Particle Distribution**
+### **Computation Results**
 
 | Sub-box            | (1,1) | (1,2) | (1,3) | (1,4) | (1,5) | (2,1) | (2,2) | (2,3) | (2,4) | (2,5) | (3,1) | (3,2) | (3,3) | (3,4) | (3,5) | (4,1) | (4,2) | (4,3) | (4,4) | (4,5) | (5,1) | (5,2) | (5,3) | (5,4) | (5,5) |
 |--------------------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
@@ -70,21 +72,13 @@ You are required to:
 | # Particles: Case (2) | 572   | 570   | 570   | 561   | 576   | 565   | 571   | 575   | 564   | 560   | 558   | 558   | 573   | 565   | 575   | 568   | 574   | 568   | 570   | 572   | 566   | 560   | 576   | 562   | 571   |
 | Time: Case (2)     | 0.31  | 0.31  | 0.31  | 0.41  | 0.31  | 0.31  | 0.31  | 0.31  | 0.38  | 0.31  | 0.31  | 0.38  | 0.40  | 0.31  | 0.30  | 0.31  | 0.38  | 0.31  | 0.31  | 0.31  | 0.31  | 0.31  | 0.31  | 0.30  | 0.29  |
 
+In general, we see a decrease in the time taken when load is balanced. When unbalanced the time taken to complete the leonard-jones potential is usually a magnitude higher for 1000 particles versus 100 particles in the sub-box. When balanced we see a 1.56x speed up in computation viewable in the table below.
 
+| Case           | Time (Seconds) | Speed up |
+|--------------------|----------|----------|
+| Max Balanced      | 0.41     | 1.56   |
+| Max Unbalanced    | 0.64     |
 
-## Analysis of Results
-
-1. **Initial vs. Balanced Distribution**: 
-    - In the initial case, heavily populated sub-boxes resulted in computational bottlenecks for the corresponding processors.
-    - Load balancing reduced these disparities, leading to a more even distribution of particles across processors.
-
-2. **Impact on Computation Time**:
-    - While load balancing improved particle distribution, communication overhead increased due to the dynamic adjustment of boundaries.
-    - The total computation time showed a slight increase in the balanced case due to higher boundary synchronization costs.
-
-3. **Potential Optimization**:
-    - Reducing the number of load-balancing iterations.
-    - Optimizing the boundary adjustment algorithm to minimize communication overhead.
 
 ---
 

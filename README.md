@@ -70,6 +70,9 @@ To run the code use ```mpirun -np 25 python /gpfs/home/bsbernstein/main.py --gra
 - Calculates potential and aggregates values.
 
 An image of a particle and the radius of interest across in the unbalanced case can be seen below.
+<p align="center">
+  <img src="https://github.com/BrandonBernstein/Project-4-Parralel-Computing/blob/main/particle-gen-zoomed-annotated.png" alt="Particle Initialization" width="500">
+</p>
 
 #### **Step 4: Profiling and MPI Communication**
 - Collect timing information for computation and MPI communication.

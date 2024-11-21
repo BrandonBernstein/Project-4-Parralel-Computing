@@ -91,5 +91,5 @@ While not shown, broadcasting has a large (~0.3s) increase when load is balanced
 Ideally, instead of an AllGather, we would like to limit which processors communicate with each other. This could be achieved by seeing which neighboring processors are within the most extreme cut-off distance of the $ith$ processor. Lowering how many distance calculations we need to compute and communication costs. From a geometric perspective, this would benefit the unbalanced case more than the balanced case which is partially why it was not implemented.
 
 ### LAMMPS
-- LAMMPS or perhaps another library would likely be able to partition the 2d space for load balancing into parallelograms that are more suited for cylindrical optimization. Unfortunately, it would not properly load into my Anaconda env.
+LAMMPS or perhaps another library would likely be able to partition the 2d space for load balancing into parallelograms that are more suited for cylindrical optimization. Unfortunately, it would not properly load into my Anaconda env.
 

@@ -4,7 +4,7 @@
 
 You are tasked with placing $N = 12 × 100 + 13 × 1000 = 14,200$ particles in a 2D box of dimensions $50 × 50$. The box is divided into $5 × 5$ sub-boxes. Each sub-box contains either $1000$ particles (13 sub-boxes) or $100$ particles (12 sub-boxes), generated randomly within each sub-box.
 
-The particles interact through the Lennard-Jones potential truncated at a cutoff radius $r_c = 10$ where $r_{ij}$ represents the distance between two particles. The potential between two particles $i$ and $j$ is given by:
+The particles interact through the Lennard-Jones potential truncated at a cutoff radius $r_c = 10$. The potential between two particles $i$ and $j$ is given by:
 
 $$
 V_{ij} =

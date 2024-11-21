@@ -34,8 +34,12 @@ You are required to:
 - `main.py`: Main script for particle initialization, MPI setup, and computation of Lennard-Jones potential.
 - `utils.py`: Contains utility functions such as plotting particles and calculating the Lennard-Jones potential.
 - `load_balance.py`: Implements the dynamic adjustment of sub-box boundaries to achieve load balance.
+- 'proj_4_run.slurm': Seawulf batch script
 
-### Algorithm Outline
+## Run Commands
+To run the code use ```mpirun -np 25 python /gpfs/home/bsbernstein/main.py --graph --load_balancing```. The --graph flag enables the graphing utils seen in this report and --load_balancing enables the load balance option. To turn either off simply remove the flag from the bash line.
+
+## Algorithm Outline
 
 #### **Step 0: Parameter Initialization**
 - Declare general variables needed for broadcasting and generation
@@ -46,24 +50,22 @@ You are required to:
 - Broadcast general parameters to processors.
 - Scatter particles to processors corresponding to their sub-boxes.
 
-
-
 #### **Step 2: Optional Load Balancing**
-- Create new boxes by setting an initial column on the left side of the grid. Incrementally expanding that column east until the number of particles contained is within $4\% \pm 0.2\%$. Then set the next column's left boundary to the previous stopping stopping point and repeat. The balance achieved generally makes the maximum load on a single processor 4.2%.
+- Create new boxes by setting an initial column on the left side of the grid. Incrementally expanding that column east until the number of particles contained is within 4% $\pm$ 0.2%. Then set the next column's left boundary to the previous stopping stopping point and repeat. The balance achieved generally makes the maximum load on a single processor 4.2%.
 
 #### **Step 2: All Gather Particles on Each Processor**
 - Gather a complete list of all particles in the system (excluding local particles) for calculations against the local particles.
 
 #### **Step 3: Lennard-Jones Potential Calculation**
-- Each processor calculates the potential for its local particles, considering all particles within the $r_c = 10$ cutoff.
+- Each processor calculates the distance for its local particles
+- Filters all particles outside the $r_c = 10$ cutoff.
+- Calculates potential and aggregates values.
 
 #### **Step 4: Profiling and MPI Communication**
 - Collect timing information for computation and MPI communication.
 - Profile the effects of load balancing on computation time.
 
 ## Results
-
-### **Computation Results**
 
 | Sub-box            | (1,1) | (1,2) | (1,3) | (1,4) | (1,5) | (2,1) | (2,2) | (2,3) | (2,4) | (2,5) | (3,1) | (3,2) | (3,3) | (3,4) | (3,5) | (4,1) | (4,2) | (4,3) | (4,4) | (4,5) | (5,1) | (5,2) | (5,3) | (5,4) | (5,5) |
 |--------------------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
@@ -80,15 +82,14 @@ In general, we see a decrease in the time taken when load is balanced. When unba
 | Max Unbalanced    | 0.64     |
 
 
----
+## Notes on Efficiency
 
-## Instructions for Execution
+### Communication
+While not shown, broadcasting has a large (~0.3s) increase when load is balanced. As the number of particles in this simulation is quite low, we see any gains from the computational speedup lost from the communication costs associated.
 
-### Requirements
-- **MPI**: Install `mpi4py` using `pip install mpi4py`.
-- **Python Dependencies**: Install `numpy` and `matplotlib`.
+### Adjacent Neighbor Calculations
+Ideally, instead of an AllGather, we would like to limit which processors communicate with each other. This could be achieved by seeing which neighboring processors are within the most extreme cut-off distance of the $ith$ processor. Lowering how many distance calculations we need to compute and communication costs. From a geometric perspective, this would benefit the unbalanced case more than the balanced case which is partially why it was not implemented.
 
-### Execution
-1. Run the program using `mpirun` or `mpiexec` with 25 processors:
-   ```bash
-   mpirun -n 25 python main.py
+### LAMMPS
+- LAMMPS or perhaps another library would likely be able to partition the 2d space for load balancing into parallelograms that are more suited for cylindrical optimization. Unfortunately, it would not properly load into my Anaconda env.
+

@@ -37,17 +37,22 @@ You are required to:
 
 ### Algorithm Outline
 
+
+#### **Step 0: Parameter Initialization**
+- Declare general variables needed for broadcasting and generation
+
 #### **Step 1: Particle Initialization**
 - Generate particles within each sub-box.
 - Assign $100$ particles to 12 randomly chosen sub-boxes and $1000$ particles to the remaining 13.
-- Scatter particles to the processors corresponding to their sub-boxes.
+- Broadcast general parameters to processors.
+- Scatter particles to processors corresponding to their sub-boxes.
 
-#### **Step 2: Lennard-Jones Potential Calculation**
+#### **Step 2: Optional Load Balancing**
+- Create new boxes by setting an initial column on the left side of the grid. Incrementally expanding that column right until the number of particles contained is within $4% +_ 0.2%$. Then set the next column's left boundary to the previous stopping stopping point and repeat. The balance achieved generally makes 
+
+#### **Step 3: Lennard-Jones Potential Calculation**
 - Each processor calculates the potential for its local particles, considering all particles within the $r_c = 10$ cutoff.
 
-#### **Step 3: Load Balancing**
-- Dynamically adjust sub-box boundaries to redistribute particles until each sub-box has approximately $568$ particles, within a tolerance of $\pm 50$.
-- Boundaries are adjusted by shifting column edges incrementally ($0.01$ units per iteration) until the balance condition is met.
 
 #### **Step 4: Profiling and MPI Communication**
 - Collect timing information for computation and MPI communication.

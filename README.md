@@ -37,7 +37,6 @@ You are required to:
 
 ### Algorithm Outline
 
-
 #### **Step 0: Parameter Initialization**
 - Declare general variables needed for broadcasting and generation
 
@@ -48,46 +47,30 @@ You are required to:
 - Scatter particles to processors corresponding to their sub-boxes.
 
 #### **Step 2: Optional Load Balancing**
-- Create new boxes by setting an initial column on the left side of the grid. Incrementally expanding that column right until the number of particles contained is within $4% +_ 0.2%$. Then set the next column's left boundary to the previous stopping stopping point and repeat. The balance achieved generally makes 
+- Create new boxes by setting an initial column on the left side of the grid. Incrementally expanding that column east until the number of particles contained is within $4\% \pm 0.2\%$. Then set the next column's left boundary to the previous stopping stopping point and repeat. The balance achieved generally makes the maximum load on a single processor 4.2%.
+
+#### **Step 2: All Gather Particles on Each Processor**
+- Gather a complete list of all particles in the system (excluding local particles) for calculations against the local particles.
 
 #### **Step 3: Lennard-Jones Potential Calculation**
 - Each processor calculates the potential for its local particles, considering all particles within the $r_c = 10$ cutoff.
-
 
 #### **Step 4: Profiling and MPI Communication**
 - Collect timing information for computation and MPI communication.
 - Profile the effects of load balancing on computation time.
 
----
-
 ## Results
 
 ### **Particle Distribution**
 
-| Sub-box   | Case (1): Initial Distribution | Case (2): Load Balanced |
-|-----------|---------------------------------|--------------------------|
-| (1,1)     | 1000                            | 568                      |
-| (1,2)     | 100                             | 570                      |
-| (1,3)     | 1000                            | 567                      |
-| ...       | ...                             | ...                      |
-| (5,5)     | 1000                            | 569                      |
+| Sub-box            | (1,1) | (1,2) | (1,3) | (1,4) | (1,5) | (2,1) | (2,2) | (2,3) | (2,4) | (2,5) | (3,1) | (3,2) | (3,3) | (3,4) | (3,5) | (4,1) | (4,2) | (4,3) | (4,4) | (4,5) | (5,1) | (5,2) | (5,3) | (5,4) | (5,5) |
+|--------------------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+| # Particles: Case (1) | 100   | 100   | 100   | 1000  | 1000  | 100   | 1000  | 1000  | 100   | 100   | 1000  | 100   | 100   | 100   | 1000  | 1000  | 100   | 1000  | 100   | 1000  | 1000  | 1000  | 100  | 100  | 1000   |
+| Time: Case (1)     | 0.07  | 0.05  | 0.06  | 0.51  | 0.62  | 0.06  | 0.51  | 0.51  | 0.06  | 0.06  | 0.64  | 0.06  | 0.06  | 0.07  | 0.5   | 0.52  | 0.06  | 0.51  | 0.53  | 0.63  | 0.51  | 0.51  | 0.06  | 0.06  | 0.51  |
+| # Particles: Case (2) | 572   | 570   | 570   | 561   | 576   | 565   | 571   | 575   | 564   | 560   | 558   | 558   | 573   | 565   | 575   | 568   | 574   | 568   | 570   | 572   | 566   | 560   | 576   | 562   | 571   |
+| Time: Case (2)     | 0.31  | 0.31  | 0.31  | 0.41  | 0.31  | 0.31  | 0.31  | 0.31  | 0.38  | 0.31  | 0.31  | 0.38  | 0.40  | 0.31  | 0.30  | 0.31  | 0.38  | 0.31  | 0.31  | 0.31  | 0.31  | 0.31  | 0.31  | 0.30  | 0.29  |
 
-### **Computation Times**
 
-| Processor | Case (1): Initial Distribution | Case (2): Load Balanced |
-|-----------|---------------------------------|--------------------------|
-| 0         | 0.045 seconds                  | 0.062 seconds           |
-| 1         | 0.050 seconds                  | 0.055 seconds           |
-| ...       | ...                             | ...                      |
-
-### **MPI Profiling**
-
-| Metric          | Case (1) | Case (2) |
-|------------------|----------|----------|
-| Total Send Time  | 0.003 s  | 0.004 s  |
-| Total Receive Time | 0.002 s  | 0.003 s  |
-
----
 
 ## Analysis of Results
 

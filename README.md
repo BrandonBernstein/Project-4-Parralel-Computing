@@ -37,7 +37,7 @@ You are required to:
 - 'proj_4_run.slurm': Seawulf batch script
 
 ## Run Commands
-To run the code use ```mpirun -np 25 python /gpfs/home/bsbernstein/main.py --graph --load_balancing```. The --graph flag enables the graphing utils seen in this report and --load_balancing enables the load balance option. To turn either off simply remove the flag from the bash line.
+To run the code use ```mpirun -np 25 python /gpfs/home/bsbernstein/main.py --graph --load_balancing```. The ```--graph``` flag enables the graphing utils seen in this report and ```--load_balancing``` enables the load balance option. To turn either off simply remove the flag from the bash line.
 
 ## Algorithm Outline
 

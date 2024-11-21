@@ -34,7 +34,7 @@ You are required to:
 - `main.py`: Main script for particle initialization, MPI setup, and computation of Lennard-Jones potential.
 - `utils.py`: Contains utility functions such as plotting particles and calculating the Lennard-Jones potential.
 - `load_balance.py`: Implements the dynamic adjustment of sub-box boundaries to achieve load balance.
-- 'proj_4_run.slurm': Seawulf batch script
+- `proj_4_run.slurm`: Seawulf batch script
 
 ## Run Commands
 To run the code use ```mpirun -np 25 python /gpfs/home/bsbernstein/main.py --graph --load_balancing```. The ```--graph``` flag enables the graphing utils seen in this report and ```--load_balancing``` enables the load balance option. To turn either off simply remove the flag from the bash line.

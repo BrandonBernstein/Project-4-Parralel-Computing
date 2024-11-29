@@ -64,7 +64,8 @@ def lennard_jones_potential(local_particles, all_particles, LJ_CUTOFF):
         squared_distances2 = np.sum(delta2**2, axis=1)
 
         within_cutoff1 = np.sqrt(squared_distances1) < LJ_CUTOFF
-        within_cutoff2 = np.sqrt(squared_distances2) > 0 # Removes ii point
+        within_cutoff2 = np.sqrt(squared_distances2) > 1e-10 # Removes ii point
+        within_cutoff2 = np.sqrt(squared_distances2) < LJ_CUTOFF
         
         valid_distances1 = squared_distances1[within_cutoff1]
         valid_distances2 = squared_distances2[within_cutoff2]

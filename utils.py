@@ -57,14 +57,25 @@ def lennard_jones_potential(local_particles, all_particles, LJ_CUTOFF):
 
     for local in local_particles:
 
-        delta = all_particles - local
-        squared_distances = np.sum(delta**2, axis=1)
+        delta1 = all_particles - local
+        delta2 = local_particles - local
+        
+        squared_distances1 = np.sum(delta1**2, axis=1)
+        squared_distances2 = np.sum(delta2**2, axis=1)
 
-        within_cutoff = np.sqrt(squared_distances) < LJ_CUTOFF
-        valid_distances = squared_distances[within_cutoff]
+        within_cutoff1 = np.sqrt(squared_distances1) < LJ_CUTOFF
+        within_cutoff2 = np.sqrt(squared_distances2) > 0 # Removes ii point
+        
+        valid_distances1 = squared_distances1[within_cutoff1]
+        valid_distances2 = squared_distances2[within_cutoff2]
+        
+        inv_dist21 = 1.0 / valid_distances1
+        inv_dist22 = 1.0 / valid_distances2
+        
+        inv_dist61 = inv_dist21 ** 3
+        inv_dist62 = inv_dist22 ** 3
 
-        inv_dist2 = 1.0 / valid_distances
-        inv_dist6 = inv_dist2 ** 3
-        potential += np.sum((inv_dist6 ** 2) - 2 * inv_dist6)
+        potential += np.sum((inv_dist61 ** 2) - 2 * inv_dist61) + np.sum((inv_dist62 ** 2) - 2 * inv_dist62)
+
 
     return 0.5 * potential
